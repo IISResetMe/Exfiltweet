@@ -44,15 +44,15 @@ function ConvertTo-Bitmap
 
   for($y, $i = 0, 0; $y -lt $Height; $y++)
   {
-    for($x = 0; $x -lt $Weight; $x, $i = ($x + 1), ($i + 1))
+    for($x = 0; $x -lt $Width; $x, $i = ($x + 1), ($i + 1))
     {
       if($null -ne $ColorList[$i]) 
       {
-        if($ColorList[$i].Count -le 3)
+        if($ColorList[$i].Count -lt 3)
         {
-          $InnerPadding..2 |ForEach-Object -Process {
+          do {
             $ColorList[$i] += $PaddingByte
-          }
+          } until ($ColorList[$i].Count -eq 3)
         }
         $R, $G, $B = $ColorList[$i] -as [int[]]
         $Color = [System.Drawing.Color]::FromArgb($R,$G,$B)
@@ -67,7 +67,6 @@ function ConvertTo-Bitmap
 
   return $BitMap
 }
-
 function ConvertFrom-Bitmap
 {
   param(
